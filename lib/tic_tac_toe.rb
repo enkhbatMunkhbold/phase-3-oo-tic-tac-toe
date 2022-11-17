@@ -19,17 +19,22 @@ class TicTacToe
     @board = board
   end
 
-  def display_board board
+  def display_board 
     new_board = board.each_slice(3).to_a
-    new_board.map.with_index do |arr, index|
-      printing_level(arr).join('')
+    new_board.each.with_index do |arr, index|
+      if index != 2
+        puts printing_level(arr).join('')
+        puts "-----------"
+      else
+        puts printing_level(arr).join('')
+      end
     end
   end
 
   def printing_level list
     list.map.with_index do |item, i|
       if i == 1
-        " | #{item} | "
+        "| #{item} |"
       else
         " #{item} "
       end
