@@ -40,6 +40,43 @@ class TicTacToe
       end
     end
   end
+
+  def input_to_index index
+    index.to_i - 1 
+  end
+
+  def move (index, token = "X")
+    board[index] = token
+  end
+
+  def position_taken? index
+    board[index] != " "
+  end
+
+  def valid_move? index
+    index >= 0 && index <= 9 && !position_taken?(index)
+  end
+
+  def turn_count
+    board.select { |token| token != " "}.length
+  end
+
+  def current_player
+    turn_count.even? ? "X" : "O"
+  end
+
+  def turn
+    print 'Select a square: '
+    input = gets.chomp.to_i
+    token = current_player
+    if valid_move?(input)
+      move(input, token)
+      display_board
+    else
+      turn
+    end
+  end
+
 end
 
 # binding.pry
