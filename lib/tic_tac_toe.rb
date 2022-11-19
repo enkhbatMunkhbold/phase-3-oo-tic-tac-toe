@@ -67,13 +67,20 @@ class TicTacToe
 
   def turn
     print 'Select a square: '
-    input = gets.chomp.to_i
+    input = input_to_index(gets.chomp)
     token = current_player
     if valid_move?(input)
       move(input, token)
       display_board
     else
       turn
+    end
+  end
+
+  def won?
+    WIN_COMBINATIONS.select do |x|
+      comb = x.map {|ind| board[ind]}
+      comb == ["X", "X", "X"] || comb == ["O", "O", "O"]
     end
   end
 
