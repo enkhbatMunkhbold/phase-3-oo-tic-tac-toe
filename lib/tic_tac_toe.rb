@@ -3,6 +3,10 @@ require "pry"
 class TicTacToe
 
   attr_accessor :board
+  
+  def initialize (board = [" ", " ", " ", " ", " ", " ", " ", " ", " "])
+    @board = board
+  end
 
   WIN_COMBINATIONS = [
     [0,1,2], 
@@ -13,14 +17,10 @@ class TicTacToe
     [2,5,8],
     [0,4,8],
     [6,4,2]
-  ]
-
-  def initialize board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
-    @board = board
-  end
+  ]  
 
   def display_board 
-    new_board = board.each_slice(3).to_a
+    new_board = @board.each_slice(3).to_a
     new_board.each.with_index do |arr, index|
       if index != 2
         puts printing_level(arr).join('')
@@ -46,11 +46,11 @@ class TicTacToe
   end
 
   def move (index, token = "X")
-    board[index] = token
+    @board[index] = token
   end
 
   def position_taken? index
-    board[index] != " "
+    @board[index] != " "
   end
 
   def valid_move? index
@@ -58,7 +58,7 @@ class TicTacToe
   end
 
   def turn_count
-    board.select { |token| token != " "}.length
+    @board.select { |token| token != " "}.length
   end
 
   def current_player
@@ -67,10 +67,10 @@ class TicTacToe
 
   def turn
     print 'Select a square: '
-    input = input_to_index(gets.chomp)
+    index = input_to_index(gets.chomp)
     token = current_player
-    if valid_move?(input)
-      move(input, token)
+    if valid_move?(index)
+      move(index, token)
       display_board
     else
       turn
@@ -78,12 +78,36 @@ class TicTacToe
   end
 
   def won?
-    WIN_COMBINATIONS.select do |x|
+    new_arr = WIN_COMBINATIONS.select do |x|
       comb = x.map {|ind| board[ind]}
       comb == ["X", "X", "X"] || comb == ["O", "O", "O"]
     end
+    new_arr.length > 0 ? new_arr.flatten : false
   end
 
+  def full?
+    !@board.include?(" ")
+  end
+
+  def draw?
+    full? && !won?
+  end
+
+  def over?
+    won? || draw?
+  end
+
+  def winner
+    if won?
+      num = won?[0]
+      @board[num]
+    end
+  end
+
+  def play
+   turn until over?
+   puts winner ? "Congratulations #{winner}!" : "Cat's Game!"
+  end
 end
 
 # binding.pry
